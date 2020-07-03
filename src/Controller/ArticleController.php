@@ -8,22 +8,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
+use JMS\Serializer\SerializationContext;
 
 class ArticleController extends Controller
 {
-    /**
-     * @Route("/article", name="article")
-     */
-    public function index()
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/ArticleController.php',
-        ]);
-    }
-
      /**
-     * @Route("/articles", name="article_create")
+     * @Route("/article", name="article_create")
      * @Method({"POST"})
      */
     public function createAction(Request $request)
@@ -43,7 +33,21 @@ class ArticleController extends Controller
      */
     public function showAction(Article $article)
     {
-        $data = $this->get('jms_serializer')->serialize($article, 'json');
+        $data = $this->get('jms_serializer')->serialize($article, 'json', SerializationContext::create()->setGroups(array('detail')));
+        $response = new Response($data);
+        $response->headers->set('Content-Type','application/json');
+
+        return $response;
+    }
+
+    /**
+     * @Route("/articles", name="article_list")
+     * @Method({"GET"})
+     */
+    public function listAction()
+    {
+        $articles = $this->getDoctrine()->getRepository('App:Article')->findAll();
+        $data = $this->get('jms_serializer')->serialize($articles, 'json' , SerializationContext::create()->setGroups(array('list')));
         $response = new Response($data);
         $response->headers->set('Content-Type','application/json');
 

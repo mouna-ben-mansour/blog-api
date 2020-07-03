@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity(repositoryClass=ArticleRepository::class)
@@ -14,16 +15,19 @@ class Article
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Serializer\Groups({"list"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Serializer\Groups({"list" , "detail"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Serializer\Groups({"list" , "detail"})
      */
     private $content;
 
