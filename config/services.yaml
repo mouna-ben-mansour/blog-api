@@ -25,3 +25,11 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    serializer_listener.article:
+        class: App\Serializer\Listener\ArticleListener
+        tags:
+            - { name: jms_serializer.event_subscriber }
+    serializer_handler.article:
+        class: App\Serializer\Handler\ArticleHandler
+        tags:
+            - { name: jms_serializer.subscribing_handler }
